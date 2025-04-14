@@ -3,3 +3,5 @@ __pycache__
 venv
 collections
 .DS_Store
+
+global.conf
