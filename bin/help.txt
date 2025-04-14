@@ -1,0 +1,43 @@
+
+Ker: Knowledge Semantic Data Base
+
+Usage:
+  ker [command] [params]
+
+Available Commands:
+
+  --------------- DB Control -------------------
+
+  create [db name]   Create a new DB
+  mv [db name]       Move between DBs
+  set [db name]      Change data base presets
+  rm [db name]       Remove an existant DB
+  ls [db name]       See files added to SDB
+  ls                 List data bases available
+
+  --------------- DB Handling ------------------
+
+  copy [new name]    Copy DB with a new name
+  export [to file]   Export DB as a file
+  import [file]      Import an exported DB
+  merge [names...]   Merge DBs into one new
+
+  --------------- DB Access --------------------
+
+  add [files]        Add files to a DB
+  chate [*n]         Chat with embedding
+                     Receives number of coincidences
+                     on SDB to display on chat
+  chat               Chat with LLM and embedding
+
+  --------------- API Deployment ---------------
+
+  run      Run the DB as an API
+                  * Chat with embeddings
+                  * Chat with LLM
+                  * Add content
+                  * Modify settings
+                  * running config on presets
+  stop     Stop a Database API Server
+
+Details on https://github.com/OmarSaldanna/ker-knowledge-sdb

@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# project directory
+export PROJECT_PATH="/Users/omarsaldanna/ker-knowledge-sdb"
+
+# Get the current working directory
+export CURRENT_PATH=$(pwd)
+
+# activate the env
+source $PROJECT_PATH/venv/bin/activate
+# activate the config
+source $PROJECT_PATH/global.conf
+
+# if help was required
+if [ "$1" = "help" ] || [ "$1" = "h" ]; then
+    cat $PROJECT_PATH/bin/help.txt
+    exit 0
+fi
+
+# if there were no arguments
+if [ $# -eq 0 ]; then
+    cat $PROJECT_PATH/bin/help.txt
+    exit 0
+fi
+
+# finally run the script
+python3 $PROJECT_PATH/main.py $@

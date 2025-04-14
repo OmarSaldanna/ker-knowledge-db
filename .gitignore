@@ -1,0 +1,5 @@
+current_sdb.txt
+__pycache__
+venv
+collections
+.DS_Store
