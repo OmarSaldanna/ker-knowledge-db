@@ -15,13 +15,13 @@ source $PROJECT_PATH/.keys
 
 # if help was required
 if [ "$1" = "help" ] || [ "$1" = "h" ]; then
-    cat $PROJECT_PATH/bin/help.txt
+    echo -e "$(cat $PROJECT_PATH/bin/help.txt)"
     exit 0
 fi
 
 # if there were no arguments
 if [ $# -eq 0 ]; then
-    cat $PROJECT_PATH/bin/help.txt
+    echo -e "$(cat $PROJECT_PATH/bin/help.txt)"
     exit 0
 fi
 

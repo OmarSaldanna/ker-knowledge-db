@@ -1,43 +1,39 @@
 
-Ker: Knowledge Semantic Data Base
+\033[1;33mAvailable Commands:\033[0m
 
-Usage:
-  ker [command] [params]
+  \033[1;34m--------------- DB Control -------------------\033[0m
 
-Available Commands:
+  \033[1;32mcreate\033[0m [db name]   Create a new DB
+  \033[1;32mmv\033[0m [db name]       Move between DBs
+  \033[1;32mset\033[0m [db name]      Change data base presets
+  \033[1;32mrm\033[0m [db name]       Remove an existant DB
+  \033[1;32mls\033[0m [db name]       See files added to SDB
+  \033[1;32mls\033[0m                 List data bases available
 
-  --------------- DB Control -------------------
+  \033[1;34m--------------- DB Access --------------------\033[0m
 
-  create [db name]   Create a new DB
-  mv [db name]       Move between DBs
-  set [db name]      Change data base presets
-  rm [db name]       Remove an existant DB
-  ls [db name]       See files added to SDB
-  ls                 List data bases available
+  \033[1;32madd\033[0m [files]        Add files to a DB
+  \033[1;32mchat\033[0m               Chat with the DB and LLM
+  \033[1;32mchate\033[0m [*n]         See embeddings that match on DB
+                       Receives number of coincidences
+                       on SDB to display on chat
 
-  --------------- DB Handling ------------------
+  \033[1;34m--------------- DB Handling ------------------\033[0m
 
-  copy [new name]    Copy DB with a new name
-  export [to file]   Export DB as a file
-  import [file]      Import an exported DB
-  merge [names...]   Merge DBs into one new
+  \033[1;32mcopy\033[0m [new name]    Copy DB with a new name \033[1;31mCOMING SOON\033[0m
+  \033[1;32mexport\033[0m [to file]   Export DB as a file \033[1;31mCOMING SOON\033[0m
+  \033[1;32mimport\033[0m [DB file]   Import an exported DB \033[1;31mCOMING SOON\033[0m
 
-  --------------- DB Access --------------------
+  \033[1;32mmerge\033[0m [names...] [new DB]  Merge DBs into one new \033[1;31mCOMING SOON\033[0m
 
-  add [files]        Add files to a DB
-  chate [*n]         Chat with embedding
-                     Receives number of coincidences
-                     on SDB to display on chat
-  chat               Chat with LLM and embedding
+  \033[1;34m--------------- API Deployment ---------------\033[0m
 
-  --------------- API Deployment ---------------
-
-  run      Run the DB as an API
+  \033[1;32mrun\033[0m      Run the DB as an API \033[1;31mCOMING SOON\033[0m
                   * Chat with embeddings
                   * Chat with LLM
                   * Add content
                   * Modify settings
                   * running config on presets
-  stop     Stop a Database API Server
+  \033[1;32mstop\033[0m     Stop a Database API Server \033[1;31mCOMING SOON\033[0m
 
-Details on https://github.com/OmarSaldanna/ker-knowledge-sdb
+More details on \033[1;33mhttps://github.com/OmarSaldanna/ker-knowledge-sdb\033[0m\n
