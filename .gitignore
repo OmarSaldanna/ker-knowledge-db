@@ -5,3 +5,4 @@ collections
 .DS_Store
 
 global.conf
+.keys

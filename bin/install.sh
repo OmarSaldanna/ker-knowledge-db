@@ -10,9 +10,13 @@ pip install --upgrade pip
 pip3 install -r requirements.txt
 
 # make ker file executable
-echo Make the file executable with
-echo "chmod 700 bin/ker"
+chmod 700 bin/ker
 
 # make a link of the ker file to be executed
-echo and make a link into an executable path
-echo "ln bin/ker ~/bin/ker"
+echo "-> Make a link into an executable path"
+echo "ln bin/ker <a folder located in \$PATH>"
+echo
+
+# make the .keys file
+echo "export OPENAI_API_KEY=" > .keys
+echo "-> paste your OpenAI API KEY in .keys file"

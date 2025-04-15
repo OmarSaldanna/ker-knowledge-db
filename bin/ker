@@ -10,6 +10,8 @@ export CURRENT_PATH=$(pwd)
 source $PROJECT_PATH/venv/bin/activate
 # activate the config
 source $PROJECT_PATH/global.conf
+# and the keys
+source $PROJECT_PATH/.keys
 
 # if help was required
 if [ "$1" = "help" ] || [ "$1" = "h" ]; then
