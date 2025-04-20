@@ -17,13 +17,16 @@ from modules.embeddings import make_embeddings
 
 class SDB:
     def __init__ (self, name: str):
-        # check if the db exists
-        availables = os.listdir(os.environ["COLLECTIONS_PATH"])
-        if name not in availables:
-            raise ValueError(f"SDB \"{name}\" doesn't exist")
-        # if not
-        # instance the db on its path
-        self.client = chromadb.PersistentClient(path=os.environ["COLLECTIONS_PATH"] + name)
+        # Base path where all collections are stored
+        base_path = os.environ["COLLECTIONS_PATH"]
+        # Full path to the specific database (collection)
+        db_path = os.path.join(base_path, name, "db")
+        # Create the directory if it doesn't exist (i.e., first time using this name)
+        if not os.path.exists(db_path):
+            os.makedirs(db_path)
+        # Initialize ChromaDB persistent client with this specific path
+        self.client = chromadb.PersistentClient(path=db_path)
+        # Get or create a collection with the given name
         self.collection = self.client.get_or_create_collection(name=name)
         # also load the config and the db dir
         self.dir = os.environ["COLLECTIONS_PATH"] + name + "/"

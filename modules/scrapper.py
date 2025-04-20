@@ -43,6 +43,6 @@ def get_content (path, current_dir, collection):
         raise ValueError(f"Only accepted {', '.join(available_extensions())} files")
 
     # if other file was accepted
-    print(f"found {len(content)} items in {path}")
+    print(f"\n\033[92mfound {len(content)} items in \033[0m{path}")
 
     return content, new_path

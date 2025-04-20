@@ -181,7 +181,7 @@ class Brain:
                     added_count += added
             except Exception as e:
                 # print error message
-                print('\033[91m' + "Error processing file " + f'\033[0m {file_path}:', e)
+                print('\n\033[91m' + "Error processing file " + f'\033[0m {file_path}:', e)
 
         # iterate over each path in args
         for path in args:
