@@ -31,6 +31,7 @@ class Brain:
             'rm': self.handle_rm,
             'remove': self.handle_rm,
             'add': self.handle_add,
+            'adds': self.handle_add,
             'set': self.handle_set,
             'chat': self.handle_use,
             'chate': self.handle_usem,
@@ -148,38 +149,61 @@ class Brain:
                     print(f"\t- {db}")
 
 ################################################################################
-    
-    # add content to database
-    def handle_add (self, args: List[str]) -> str:
+
+    # add content to database, supports files and folders
+    def handle_add(self, args: List[str]) -> str:
         # locate the db
         name = which_sdb()
         if name == "":
+            # no database selected
             print('\033[91m' + "SDB not selected, use: " + f'\033[0mker mv [SDB name]')
             return
-        # then there are content to add
+        # print adding message
         print('\033[92m' + "Adding memories to " + '\033[0m' + name + '\033[92m' + "..." + '\033[0m\n')
         # instance the db
         sdb = SDB(name)
         # counter of items
         added_count = 0
-        # for each file get the content
-        for file in args:
-            # try:
-            # get the file content
-            content, new_path = get_content(file, current_dir, name)
-            # and let the db add the content
-            added = sdb.add_documents(content)
-            # if it's correct, then save the file in assets
-            if added > 0:
-                # copy the file to assets
-                shutil.copyfile(current_dir + file, new_path)
-                # count items
-                added_count += added
-                # and add the file name to a collection log
-            # except Exception as e:
-                # print('\033[91m' + "Error processing file " + f'\033[0m {file}:', e)
+
+        # helper to process a single file
+        def process_file(file_path):
+            nonlocal added_count
+            try:
+                # get the file content
+                content, new_path = get_content(file_path, current_dir, name)
+                # and let the db add the content
+                added = sdb.add_documents(content)
+                # if it's correct, then save the file in assets
+                if added > 0:
+                    # copy the file to assets
+                    shutil.copyfile(current_dir + file_path, new_path)
+                    # count items
+                    added_count += added
+            except Exception as e:
+                # print error message
+                print('\033[91m' + "Error processing file " + f'\033[0m {file_path}:', e)
+
+        # iterate over each path in args
+        for path in args:
+            # get full path
+            full_path = os.path.join(current_dir, path)
+            # if it's a folder
+            if os.path.isdir(full_path):
+                # iterate each file in the folder
+                for filename in os.listdir(full_path):
+                    file_path = os.path.join(path, filename)
+                    # only process if it's a file
+                    if os.path.isfile(os.path.join(current_dir, file_path)):
+                        process_file(file_path)
+            # if it's a file
+            elif os.path.isfile(full_path):
+                process_file(path)
+            # if it's not found
+            else:
+                print('\033[91m' + f"Path not found: {path}" + '\033[0m')
         # finally
         print('\n\033[92m' + f"Added {added_count} items to \033[0m{name}")
+
 
     # copy the path to settings file
     def handle_set (self, args: List[str]) -> str:
