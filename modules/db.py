@@ -31,13 +31,8 @@ class SDB:
             self.config = json.load(f)
 
     def _generate_embeddings (self, text: str):
-        # use the preset model with ollama to make the embeddings
-        # return ollama.embeddings(
-        #     model=self.config["embedding"],
-        #     prompt=text
-        # )['embedding']
+        # use the preset model to make the embeddings
         return make_embeddings(self.config["embedding"], text)
-
 
     def add_documents (self, content: list):
         # parameters for chromadb
@@ -52,9 +47,10 @@ class SDB:
             # and the content
             docs.append(json.dumps(doc, indent=4, ensure_ascii=False))
         # check if any of the documents already exist
-        exist_any = self.collection.get(ids=ids[0])['documents']
+        exist_first = self.collection.get(ids=ids[0])['documents']
+        exist_last = self.collection.get(ids=ids[-1])['documents']
         # 
-        if exist_any:
+        if exist_first and exist_last:
             print('\033[93m' + ">>> coincidence on SDB, skipping..." + '\033[0m\n')
             return 0
         else:
