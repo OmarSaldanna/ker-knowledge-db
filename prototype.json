@@ -1,7 +1,7 @@
 {
     "name": "",
     "description": "",
-    "llm": "gpt-4o-mini",
+    "llm": "gpt-4.1-nano",
     "embedding": "text-embedding-3-large",
     "api": {
         "port": 31416,
