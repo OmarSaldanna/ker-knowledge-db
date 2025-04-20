@@ -1,19 +1,104 @@
 import re
 import json
 from pathlib import Path
+import tiktoken  # Token counter
+
+
+# Function to count tokens in a text
+def count_tokens(text):
+    """
+    Returns the number of tokens in `text` using the tiktoken encoder for gpt-4o-mini.
+    """
+    encoding = tiktoken.encoding_for_model("gpt-4o-mini")
+    return len(encoding.encode(text))
+
+# Function to split a chapter by token count
+def split_by_tokens(chapter, max_tokens=1000):
+    """
+    Splits `chapter["content"]` into parts each <= max_tokens, breaking at sentence boundaries where possible.
+    If a single sentence exceeds max_tokens, it falls back to splitting at word boundaries.
+    Returns a list of new chapter dicts with updated titles and content.
+    """
+    content = chapter["content"]
+    # Split on sentence boundaries
+    sentences = re.split(r'(?<=\.)\s+', content)
+
+    parts = []
+    temp = ""
+
+    for sent in sentences:
+        # If current temp+sentence fits, accumulate
+        combined = (temp + ' ' + sent).strip()
+        if count_tokens(combined) <= max_tokens:
+            temp = combined
+        else:
+            # Flush existing temp
+            if temp:
+                parts.append(temp)
+            # If the sentence itself is too long, split by words
+            if count_tokens(sent) > max_tokens:
+                words = sent.split()
+                seg = ""
+                for w in words:
+                    if count_tokens((seg + ' ' + w).strip()) <= max_tokens:
+                        seg = (seg + ' ' + w).strip()
+                    else:
+                        parts.append(seg)
+                        seg = w
+                if seg:
+                    parts.append(seg)
+                temp = ""
+            else:
+                # Start new segment with this sentence
+                temp = sent
+    # Add any remaining text
+    if temp:
+        parts.append(temp)
+
+    # Create new chapter entries
+    result = []
+    for idx, text in enumerate(parts):
+        new_ch = chapter.copy()
+        title_base = chapter.get('title', 'Chapter')
+        new_ch['title'] = f"{title_base} - part {idx+1}"
+        new_ch['content'] = text
+        result.append(new_ch)
+
+    return result
+
+# Recursive function to split long chapters
+def split_long_chapters(chapters, max_tokens=1000):
+    """
+    Recursively splits all chapters in the list so that no chapter's content exceeds max_tokens.
+    - chapters: list of dicts, each with at least 'title' and 'content'.
+    - max_tokens: integer token limit.
+
+    Returns a new list of chapters all within the token limit.
+    """
+    split_result = []
+
+    for ch in chapters:
+        total = count_tokens(ch['content'])
+        if total > max_tokens:
+            # print(f"{total} tokens detected in '{ch.get('title', '')}'... splitting...")
+            # First-level split
+            parts = split_by_tokens(ch, max_tokens)
+            # Recursively ensure each part is within the limit
+            split_result.extend(split_long_chapters(parts, max_tokens))
+        else:
+            split_result.append(ch)
+
+    return split_result
+
+
+def remove_empty_content(list_of_dicts):
+    return [
+        item for item in list_of_dicts
+        if item.get("content", "") != ""
+    ]
+
 
 def analyze (input_file, output_file=None):
-    """
-    Convierte un archivo Markdown en un diccionario estructurado y opcionalmente lo guarda como JSON.
-    Incluye preprocesamiento para eliminar números consecutivos y limpiar tablas.
-    
-    Args:
-        input_file (str): Ruta al archivo Markdown de entrada.
-        output_file (str, optional): Ruta al archivo JSON de salida. Si es None, no se guarda el archivo.
-        
-    Returns:
-        list: Lista de diccionarios con la estructura de secciones del Markdown.
-    """
     try:
         # Leer el archivo Markdown
         input_path = Path(input_file)
@@ -68,6 +153,11 @@ def analyze (input_file, output_file=None):
                     "links": has_links
                 })
         
+        # split long chapters
+        sections = split_long_chapters(sections)
+        # and remove empty content chapters
+        sections = remove_empty_content(sections)
+
         # Si se proporciona un archivo de salida, guardar el resultado como JSON
         if output_file:
             output_path = Path(output_file)
@@ -163,4 +253,4 @@ def clean_table_line(line):
     return cleaned_line
 
 
-# analyze ("documento.md", "openai.json")
+analyze ("markdowns/Proyecto Final Bases Avanzadas 52f65a2a12764fea957602078be90658.md", "res.json")
