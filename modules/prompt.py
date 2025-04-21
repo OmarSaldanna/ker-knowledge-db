@@ -14,7 +14,10 @@ def create_prompt (context, question, config):
 		context_str += "\n"
 		context_str += c["content"]
 		context_str += "\n"
-		context_str += "Páginas: " + str(c["pages"]) + ", de " + c["source"]
+		# if the content has pages (comes from a pdf, pptx or docx)
+		if "pages" in c:
+			context_str += "Páginas: " + str(c["pages"]) + ". "
+		context_str += "Fuente: " + c["source"]
 		context_str += "\n"
 	# and the context from the db
 	prompt = prompt.replace("{*context}", context_str)
