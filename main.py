@@ -6,10 +6,11 @@ import pyperclip
 from typing import List, Dict
 
 # import modules
-from modules.llm import chat
-from modules.db import new_sdb, SDB
-from modules.scrapper import get_content
-from modules.extras import move_to_sdb, which_sdb
+from modules.llm import chat # used to call an LLM
+from modules.db import new_sdb, SDB # create and instance an SDB
+from modules.scrapper import get_content # get content from files
+from modules.extras import move_to_sdb, which_sdb # manage the current_sdb file
+from modules.prompt import create_prompt # function to create the prompt
 
 
 # the main path of the project
@@ -48,13 +49,6 @@ class Brain:
         else:
             print('\033[91m' + "Unknown comand, type: " + '\033[0m' + "ker help" + '\033[91m' + " for more" + '\033[0m')
             return
-
-    def _load_config (self, name: str):
-        self.config = {}
-        # open the file
-        with open(main_path + name + "/config.json", "r") as f:
-            # and save the content
-            self.config = json.load(f)
 
 ################################################################################
 
@@ -206,7 +200,6 @@ class Brain:
         # finally
         print('\n\033[92m' + f"Added {added_count} items to \033[0m{name}")
 
-
     # copy the path to settings file
     def handle_set (self, args: List[str]) -> str:
         # check if a name was given
@@ -239,7 +232,7 @@ class Brain:
         name = which_sdb()
         if name == "":
             print('\033[91m' + "SDB not selected, use: " + f'\033[0mker mv [SDB name]')
-            return
+            return            
         # then get the number of coincidences
         coincidences = int(os.environ["DEFAULT_COINCIDENCES"])
         # check if it was given
@@ -249,13 +242,16 @@ class Brain:
         except:
             pass
         os.system("clear")
-        # if it's llm, then load the config
-        self._load_config(name)
         # then start the db
         print('\033[92m' + "Embedding Chat on: \033[0m" + name + '\n')
         sdb = SDB(name)
+        # the config comes in sdb
+
+        ######################## Chat section #########################
+        
         # start the chat
         while True:
+            ###################### Check part ##########################
             # get the prompt
             question = input("\n\033[95m>>> Prompt~$ \033[0m")
             # an empty message
@@ -269,30 +265,31 @@ class Brain:
             if question == "clear":
                 os.system("clear")
                 continue
+            ###################### Answer part ##########################
             # then make the query
-            res = sdb.query(question, coincidences)
-            # only get the content
-            context = [json.loads(r.replace("'", "\""))["content"] for r in res]
+            context = sdb.query(question, coincidences)
 
             # to answer without llm
             if not llm:
                 # print results
                 print("\n")
                 for c in context:
-                    print(c)
-                    print("\n","*****"*10, "\n")
+                    # print(c["content"])
+                    # print("\n","*****"*10, "\n")
+                    print(create_prompt(context, question, sdb.config))
+                    break
 
             # or answer with llm
             else:
                 # create a system message
-                prompt = "\n".join(self.config["system"])
+                # prompt = "\n".join(self.config["system"])
                 # and insert question and context
-                prompt = prompt.replace("{*question}", question)
+                # prompt = prompt.replace("{*question}", question)
                 # for content we need to use only the text
-                prompt = prompt.replace("{*context}", "\n\n".join(context))
+                # prompt = prompt.replace("{*context}", "\n\n".join(context))
                 # then chat
                 print("\n\033[92m>>> Ker~$ \033[0m", end='')
-                print(chat(self.config["llm"], prompt))
+                print(chat(sdb.config["llm"], create_prompt(context, question, sdb.config)))
                 print("\n")
 
 ################################################################################
