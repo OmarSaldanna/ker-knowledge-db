@@ -61,13 +61,18 @@ class SDB:
             self.collection.add(ids=ids, documents=docs, embeddings=embeddings)
             return len(ids)
 
-    def query(self, query_text: str, n_results: int):
+    def query (self, query_text: str, n_results: int):
         # make a query to the db
         query_embedding = self._generate_embeddings(query_text)
         # fetch results from the db
         results = self.collection.query(query_embeddings=[query_embedding], n_results=n_results)
-        # and return
-        return results['documents'][0] if 'documents' in results else []
+        # if there were not results
+        if 'documents' not in results:
+            return []
+        # else get the results
+        results = results['documents'][0]
+        # parse to json and return
+        return [json.loads(r.replace("'", "\"")) for r in results]
 
 
 # function to create db
