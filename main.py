@@ -11,12 +11,12 @@ from modules.db import new_sdb, SDB
 from modules.scrapper import get_content
 from modules.extras import move_to_sdb, which_sdb
 
+
 # the main path of the project
 main_path = os.environ["COLLECTIONS_PATH"]
 # current dir, from where ker where executed
 current_dir = os.environ["CURRENT_PATH"] + "/"
-# get the current database
-# current_sdb = which_sdb()
+
 
 # main command handler
 class Brain:
@@ -128,6 +128,8 @@ class Brain:
 
     # list sdbs
     def handle_ls (self, args: List[str]) -> str:
+        # first show what db is user on
+        print(f"Currently on \033[94m{which_sdb()}\033[0m\n")
         # if name was passed
         if len(args) > 0:
             name = args[0]
