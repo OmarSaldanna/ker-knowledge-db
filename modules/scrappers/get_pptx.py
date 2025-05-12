@@ -54,5 +54,5 @@ def analyze (pptx_path, json_output_path=None):
     return data
 
 
-# analyze("presentacion.pptx", "resultado.json")
+analyze("press.pptx", "resultado.json")
 # pip install python-pptx

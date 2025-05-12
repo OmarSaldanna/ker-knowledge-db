@@ -28,9 +28,9 @@ def get_content (path, current_dir, collection):
 
 ##############################################################
 
-    if extension in available_extensions():
+    if "get_" + extension in available_extensions():
         # then import the content scrapper
-        scrapper = importlib.import_module(f"modules.scrappers.{extension}")
+        scrapper = importlib.import_module(f"modules.scrappers.get_{extension}")
         # use it to analyze the file
         content = scrapper.analyze(path)
         # add the ids and source to the file
