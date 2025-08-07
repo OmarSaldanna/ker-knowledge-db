@@ -1,13 +1,10 @@
 {
     "name": "",
     "description": "",
+    "llm_provider": "OpenAI",
     "llm": "gpt-4.1-nano",
+    "embedding_provider":"OpenAI",
     "embedding": "text-embedding-3-large",
-    "api": {
-        "port": 31416,
-        "host": "127.0.0.1",
-        "dev": true
-    },
     "prompt": [
         "## Prompt",
         "Eres un asistente de inteligencia artificial altamente capacitado.",

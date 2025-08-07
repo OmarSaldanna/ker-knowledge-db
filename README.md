@@ -27,10 +27,7 @@ Available Commands:
 
   --------------- API Deployment ---------------
 
-  run      Run the DB as an API COMING SOON
-                  * Chat with embeddings
-                  * Chat with LLM
-                  * Add content
-                  * Modify settings
-                  * running config on presets
-  stop     Stop a Database API Server COMING SOON
+  run      Run System an API
+  stop     Stop System API
+
+  More information at https://github.com/OmarSaldanna/ker-knowledge-db

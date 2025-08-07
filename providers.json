@@ -1,0 +1,14 @@
+{
+	"providers": [
+            {
+                "name": "OpenAI",
+                "models": ["gpt-4.1-nano", ""],
+                "status": "available"
+            },
+            {
+                "name": "Ollama",
+                "models": ["deepseek-r1:1.5b", "gemma3:4b", "llama3:instruct"],
+                "status": "available"
+            }
+        ]
+}
